@@ -464,7 +464,7 @@ class ReportingCardViewState extends State<ReportingCardView> {
                             const LatLng(51.25851739912562, 5.622422796819703),
                         width: 30,
                         height: 30,
-                        child: SvgPicture.asset(AssetIcons.locationDot),
+                        child: SvgPicture.asset(AssetIcons.location),
                         rotate: true,
                       ),
                     ],
