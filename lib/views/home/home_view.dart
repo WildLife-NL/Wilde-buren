@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wilde_buren/config/theme/asset_icons.dart';
 import 'package:wilde_buren/config/theme/custom_colors.dart';
@@ -8,15 +9,20 @@ import 'package:wilde_buren/views/home/widgets/bottom_navigation_bar_indicator.d
 import 'package:wilde_buren/views/interaction/interaction_view.dart';
 import 'package:wilde_buren/views/profile/profile_view.dart';
 import 'package:wilde_buren/views/map/map_view.dart';
-import 'package:wilde_buren/views/reporting/manager/location.dart';
 import 'package:wilde_buren/views/reporting/reporting.dart';
+import 'package:wilde_buren/views/reporting/widgets/manager/location.dart';
+import 'package:wilde_buren/views/reporting/widgets/snackbar_with_progress_bar.dart';
 import 'package:wilde_buren/views/species/species_view.dart';
+import 'package:wildlife_api_connection/models/interaction.dart';
 import 'package:wildlife_api_connection/models/interaction_type.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({
     super.key,
+    this.interaction,
   });
+
+  final Interaction? interaction;
 
   @override
   State<HomeView> createState() => _HomeViewState();
@@ -37,6 +43,22 @@ class _HomeViewState extends State<HomeView> {
     super.initState();
     LocationManager().requestLocationAccess(context);
     _getInteractionTypes();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      if (widget.interaction != null &&
+          widget.interaction!.questionnaire != null) {
+        SnackBarWithProgress.show(
+          context: context,
+          interaction: widget.interaction!,
+          questionnaire: widget.interaction!.questionnaire!,
+        );
+      }
+    });
   }
 
   Future<void> _getInteractionTypes() async {

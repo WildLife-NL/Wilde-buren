@@ -5,7 +5,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:wilde_buren/config/theme/asset_icons.dart';
 import 'package:wilde_buren/config/theme/custom_colors.dart';
 import 'package:wilde_buren/services/species.dart';
-import 'package:wilde_buren/views/reporting/manager/location.dart';
+import 'package:wilde_buren/views/reporting/widgets/manager/location.dart';
 import 'package:wildlife_api_connection/models/interaction_type.dart';
 import 'package:wildlife_api_connection/models/species.dart';
 
@@ -55,8 +55,10 @@ class ReportingCardViewState extends State<ReportingCardView> {
   String? _animalSpecies;
   Species? _selectedSpecies;
 
-  final TextEditingController _controller = TextEditingController();
-  bool _descriptionNotEmpty = false;
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _descriptionController = TextEditingController();
+
+  bool _descriptionIsEmpty = true;
 
   List<String> animalSpecies = [
     "Evenhoevigen",
@@ -73,9 +75,9 @@ class ReportingCardViewState extends State<ReportingCardView> {
       _getLocation();
     }
 
-    _controller.addListener(() {
+    _descriptionController.addListener(() {
       setState(() {
-        _descriptionNotEmpty = _controller.text.isNotEmpty;
+        _descriptionIsEmpty = _descriptionController.text.isEmpty;
       });
     });
   }
@@ -148,7 +150,7 @@ class ReportingCardViewState extends State<ReportingCardView> {
   Widget build(BuildContext context) {
     _animalSpecies = widget.animalSpecies;
     _selectedSpecies = widget.species;
-    _description = widget.description ?? _controller.text;
+    _description = widget.description ?? _descriptionController.text;
 
     return Column(
       children: [
@@ -162,24 +164,13 @@ class ReportingCardViewState extends State<ReportingCardView> {
                 color: CustomColors.primary,
               ),
               onPressed: () {
-                if (widget.interactionType!.id != 2) {
-                  if (widget.step != 1) {
-                    widget.goToPreviousPage(
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeInOut,
-                    );
-                  } else {
-                    Navigator.of(context).pop();
-                  }
+                if (widget.step != 1) {
+                  widget.goToPreviousPage(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                  );
                 } else {
-                  if (widget.step != 3) {
-                    widget.goToPreviousPage(
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeInOut,
-                    );
-                  } else {
-                    Navigator.of(context).pop();
-                  }
+                  Navigator.pop(context);
                 }
               },
             ),
@@ -198,13 +189,15 @@ class ReportingCardViewState extends State<ReportingCardView> {
                 size: 28,
               ),
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.pop(context);
               },
             ),
           ],
         ),
+        Text(
+            "Je bent nu een '${widget.interactionType!.name.toLowerCase()}' aan het rapporteren."),
+        const SizedBox(height: 10),
         if (widget.step == 1 || widget.step == 2) ...[
-          const SizedBox(height: 10),
           Expanded(
             child: GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -298,118 +291,157 @@ class ReportingCardViewState extends State<ReportingCardView> {
           ),
         ] else if (widget.step == 3) ...[
           const SizedBox(height: 10),
-          TextFormField(
-            controller: _controller,
-            decoration: const InputDecoration(
-              labelText: "Typ hier je opmerkingen ...",
-              border: OutlineInputBorder(),
-              alignLabelWithHint: true,
-            ),
-            maxLines: null,
-            keyboardType: TextInputType.multiline,
-          ),
-          const SizedBox(height: 10),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Theme.of(context).primaryColor),
-            onPressed: () {
-              _updateDescription(_controller.text);
-              widget.onPressed();
-            },
-            child: Text(_descriptionNotEmpty ? "Volgende" : widget.buttonText),
-          ),
-        ] else ...[
-          const SizedBox(height: 10),
-          if (widget.step == 4) ...[
-            SizedBox(
-              height: 150,
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  crossAxisSpacing: 20.0,
-                  mainAxisSpacing: 20.0,
-                  childAspectRatio: 0.70,
-                ),
-                itemCount: widget.interactionType!.id != 2 ? 3 : 1,
-                itemBuilder: (BuildContext context, int index) {
-                  return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(15),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
-                              offset: const Offset(0, 4),
-                              blurRadius: 6,
-                              spreadRadius: 1,
+          Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextFormField(
+                      controller: _descriptionController,
+                      maxLines: null,
+                      decoration: const InputDecoration(
+                        labelText: 'Beschrijving (Optioneel)',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              _updateDescription(_descriptionController.text);
+                              widget.onPressed();
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor: Colors.green,
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 12,
+                              horizontal: 24,
                             ),
-                          ],
+                          ),
+                          child: Text(
+                            _descriptionIsEmpty
+                                ? "Overslaan"
+                                : widget.buttonText,
+                            style: const TextStyle(fontSize: 16),
+                          ),
                         ),
-                        child: Padding(
-                          padding: index == 0
-                              ? const EdgeInsets.all(15.0)
-                              : index == 1
-                                  ? const EdgeInsets.all(10.0)
-                                  : const EdgeInsets.all(0),
-                          child: AspectRatio(
-                            aspectRatio: 1,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(15),
-                              child: widget.interactionType!.id != 2
-                                  ? index == 0
-                                      ? SvgPicture.asset(
-                                          AssetIcons.getInteractionIcon(
-                                              widget.interactionType!.name),
-                                        )
-                                      : index == 1
-                                          ? SvgPicture.asset(
-                                              AssetIcons.getAnimalSpeciesIcon(
-                                                widget.animalSpecies!
-                                                    .toLowerCase(),
-                                              ),
-                                            )
-                                          : Image.asset(
-                                              'assets/images/${widget.species!.commonName.toLowerCase().replaceAll(' ', '-')}.jpg',
-                                              fit: BoxFit.cover,
-                                            )
-                                  : SvgPicture.asset(
-                                      AssetIcons.getInteractionIcon(
-                                          widget.interactionType!.name),
-                                    ),
-                            ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ] else if (widget.step == 4) ...[
+          SizedBox(
+            height: 150,
+            child: GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                crossAxisSpacing: 20.0,
+                mainAxisSpacing: 20.0,
+                childAspectRatio: 0.70,
+              ),
+              itemCount: widget.interactionType!.id != 2 ? 3 : 1,
+              itemBuilder: (BuildContext context, int index) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            offset: const Offset(0, 4),
+                            blurRadius: 6,
+                            spreadRadius: 1,
+                          ),
+                        ],
+                      ),
+                      child: Padding(
+                        padding: index == 0
+                            ? const EdgeInsets.all(15.0)
+                            : index == 1
+                                ? const EdgeInsets.all(10.0)
+                                : const EdgeInsets.all(0),
+                        child: AspectRatio(
+                          aspectRatio: 1,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: index == 0
+                                ? SvgPicture.asset(
+                                    AssetIcons.getInteractionIcon(
+                                        widget.interactionType!.name),
+                                  )
+                                : index == 1
+                                    ? SvgPicture.asset(
+                                        AssetIcons.getAnimalSpeciesIcon(
+                                          widget.animalSpecies!.toLowerCase(),
+                                        ),
+                                      )
+                                    : Image.asset(
+                                        'assets/images/${widget.species!.commonName.toLowerCase().replaceAll(' ', '-')}.jpg',
+                                        fit: BoxFit.cover,
+                                      ),
                           ),
                         ),
                       ),
-                      const SizedBox(height: 6),
-                      Text(
-                        widget.interactionType!.id != 2
-                            ? index == 0
-                                ? widget.interactionType!.name
-                                : index == 1
-                                    ? widget.animalSpecies ?? ""
-                                    : widget.species!.commonName
-                            : widget.interactionType!.name,
-                        style: const TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      widget.interactionType!.id != 2
+                          ? index == 0
+                              ? widget.interactionType!.name
+                              : index == 1
+                                  ? widget.animalSpecies ?? ""
+                                  : widget.species!.commonName
+                          : widget.interactionType!.name,
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
                       ),
-                    ],
-                  );
-                },
-              ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                );
+              },
             ),
-          ],
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (widget.description != null &&
+                        widget.description!.isNotEmpty) ...[
+                      const Text(
+                        "Beschrijving:",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: CustomColors.primary,
+                        ),
+                      ),
+                      Text("${widget.description!.substring(0, 40)} ..."),
+                      const SizedBox(height: 10),
+                    ],
+                  ],
+                ),
+              ),
+            ],
+          ),
           const SizedBox(height: 10),
-          if (widget.description != null && widget.description!.isNotEmpty) ...[
-            Text("Opmerkingen: ${widget.description}"),
-            const SizedBox(height: 10),
-          ],
           Expanded(
             child: SizedBox(
               child: FlutterMap(
@@ -451,7 +483,7 @@ class ReportingCardViewState extends State<ReportingCardView> {
                   backgroundColor: CustomColors.error,
                 ),
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  Navigator.pop(context);
                 },
                 child: const Text("Annuleren"),
               ),

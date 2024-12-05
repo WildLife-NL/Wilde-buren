@@ -3,7 +3,9 @@ import 'package:latlong2/latlong.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:wilde_buren/config/theme/custom_colors.dart';
 import 'package:wilde_buren/services/interaction.dart';
-import 'package:wilde_buren/views/reporting/reviewing_card.dart';
+import 'package:wilde_buren/views/home/home_view.dart';
+import 'package:wilde_buren/views/reporting/reporting_card.dart';
+import 'package:wildlife_api_connection/models/interaction.dart';
 import 'package:wildlife_api_connection/models/interaction_type.dart';
 import 'package:wildlife_api_connection/models/location.dart';
 import 'package:wildlife_api_connection/models/species.dart';
@@ -50,6 +52,11 @@ class ReportingViewState extends State<ReportingView> {
   Species? _selectedSpecies;
   LatLng? _reportLocation;
 
+  @override
+  void initState() {
+    super.initState();
+  }
+
   void _updateInteractionData(
     String? description,
     Species? species,
@@ -64,80 +71,89 @@ class ReportingViewState extends State<ReportingView> {
     });
   }
 
-  void _submitReport() {
+  Future<Interaction?> _submitReport() async {
     if (_selectedSpecies != null && _reportLocation != null) {
-      InteractionService().createInteraction(
+      return InteractionService().createInteraction(
         _description ?? "",
         Location(
-          latitude: _reportLocation!.latitude.toInt(),
-          longitude: _reportLocation!.longitude.toInt(),
+          latitude: _reportLocation?.latitude ?? 0,
+          longitude: _reportLocation?.longitude ?? 0,
         ),
-        _selectedSpecies!.id,
+        _selectedSpecies?.id ?? "",
         widget.interactionType.id,
       );
     }
+    return null;
   }
 
   List<Widget> _buildReportingPages() {
     return [
-      if (widget.interactionType.id != 2) ...[
-        ReportingCardView(
-          question: "Diersoort rapportage:",
-          step: 1,
-          buttonText: "Volgende",
-          goToPreviousPage: _pageController.previousPage,
-          onPressed: () {
-            _pageController.nextPage(
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.linear,
-            );
-          },
-          onDataChanged: _updateInteractionData,
-          interactionType: widget.interactionType,
-        ),
-        ReportingCardView(
-          question: "Dier rapportage:",
-          step: 2,
-          buttonText: "Volgende",
-          animalSpecies: _selectedAnimalSpecies,
-          goToPreviousPage: _pageController.previousPage,
-          onPressed: () {
-            _pageController.nextPage(
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.linear,
-            );
-          },
-          onDataChanged: _updateInteractionData,
-          interactionType: widget.interactionType,
-        ),
-      ],
-      if (widget.interactionType.id == 2) ...[
-        ReportingCardView(
-          question: "Heb je nog opmerkingen?",
-          step: 3,
-          buttonText: "Overslaan",
-          goToPreviousPage: _pageController.previousPage,
-          onPressed: () {
-            _pageController.nextPage(
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.linear,
-            );
-          },
-          location: _reportLocation,
-          animalSpecies: _selectedAnimalSpecies,
-          species: _selectedSpecies,
-          interactionType: widget.interactionType,
-          onDataChanged: _updateInteractionData,
-        ),
-      ],
+      ReportingCardView(
+        question: "Diersoort rapportage:",
+        step: 1,
+        buttonText: "Volgende",
+        goToPreviousPage: _pageController.previousPage,
+        onPressed: () {
+          _pageController.nextPage(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.linear,
+          );
+        },
+        onDataChanged: _updateInteractionData,
+        interactionType: widget.interactionType,
+      ),
+      ReportingCardView(
+        question: "Dier rapportage:",
+        step: 2,
+        buttonText: "Volgende",
+        animalSpecies: _selectedAnimalSpecies,
+        goToPreviousPage: _pageController.previousPage,
+        onPressed: () {
+          _pageController.nextPage(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.linear,
+          );
+        },
+        onDataChanged: _updateInteractionData,
+        interactionType: widget.interactionType,
+      ),
+      ReportingCardView(
+        question: "Heb je nog opmerkingen?",
+        step: 3,
+        buttonText: "Volgende",
+        goToPreviousPage: _pageController.previousPage,
+        onPressed: () {
+          _pageController.nextPage(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.linear,
+          );
+        },
+        location: _reportLocation,
+        animalSpecies: _selectedAnimalSpecies,
+        species: _selectedSpecies,
+        interactionType: widget.interactionType,
+        onDataChanged: _updateInteractionData,
+      ),
       ReportingCardView(
         question: "Overzicht rapportage:",
         step: 4,
         buttonText: "Rapporteer",
         goToPreviousPage: _pageController.previousPage,
-        onPressed: () {
-          _submitReport();
-          Navigator.pop(context);
+        onPressed: () async {
+          final interaction = await _submitReport();
+          if (interaction != null && interaction.questionnaire != null) {
+            if (mounted) {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => HomeView(
+                    interaction: interaction,
+                  ),
+                ),
+                (route) => false,
+              );
+            }
+          }
         },
         location: _reportLocation,
         species: _selectedSpecies,
