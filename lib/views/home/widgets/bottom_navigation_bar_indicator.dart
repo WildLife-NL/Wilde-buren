@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:wilde_buren/config/theme/custom_colors.dart';
 
 class BottomNavigationBarIndicator extends StatelessWidget {
   const BottomNavigationBarIndicator({
@@ -18,10 +17,10 @@ class BottomNavigationBarIndicator extends StatelessWidget {
     return AnimatedPositioned(
       duration: animationDuration,
       curve: Curves.easeInOut,
-      top: 0,
-      left: selectedIndex * MediaQuery.of(context).size.width / 4,
+      bottom: 45,
+      left: selectedIndex * indicatorWidth,
       child: Container(
-        width: MediaQuery.of(context).size.width / 4,
+        width: indicatorWidth,
         alignment: Alignment.center,
         child: ClipRRect(
           borderRadius: const BorderRadius.only(
@@ -29,7 +28,7 @@ class BottomNavigationBarIndicator extends StatelessWidget {
             bottomRight: Radius.circular(10),
           ),
           child: Container(
-            color: CustomColors.secondary,
+            color: Colors.white,
             width: 60,
             height: 3,
           ),

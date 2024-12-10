@@ -10,7 +10,16 @@ class MapView extends StatefulWidget {
 
 class _MapViewState extends State<MapView> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return const CustomScaffold(body: Center(child: Text('Map')));
+    return const CustomScaffold(
+      body: Center(
+        child: Text('Map'),
+      ),
+    );
   }
 }

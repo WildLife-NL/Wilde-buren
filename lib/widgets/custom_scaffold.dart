@@ -52,19 +52,21 @@ class _CustomScaffoldState extends State<CustomScaffold> {
           ? null
           : widget.appBar ??
               AppBar(
-                  title: widget.appBarTitle,
-                  backgroundColor: widget.appBarBackgroundColor,
-                  titleTextStyle:
-                      CustomTheme(context).themeData.textTheme.headlineMedium,
-                  toolbarHeight: Platform.isIOS ? 55 : 85,
-                  centerTitle: true,
-                  elevation: 0,
-                  leading: widget.appBarLeading,
-                  actions: widget.actions,
-                  leadingWidth: 40 + SizeSetter.getHorizontalScreenPadding(),
-                  systemOverlayStyle: widget.systemOverlayStyle,
-                  automaticallyImplyLeading: widget.automaticallyImplyLeading,
-                  iconTheme: const IconThemeData(color: CustomColors.light)),
+                title: widget.appBarTitle,
+                backgroundColor: widget.appBarBackgroundColor,
+                titleTextStyle:
+                    CustomTheme(context).themeData.textTheme.headlineMedium,
+                toolbarHeight: Platform.isIOS ? 55 : 85,
+                centerTitle: true,
+                elevation: 0,
+                leading: widget.appBarLeading,
+                actions: widget.actions,
+                leadingWidth: 40 + SizeSetter.getHorizontalScreenPadding(),
+                systemOverlayStyle: widget.systemOverlayStyle,
+                automaticallyImplyLeading: widget.automaticallyImplyLeading,
+                iconTheme: const IconThemeData(color: CustomColors.light),
+              ),
+      floatingActionButton: widget.floatingActionButton,
       body: SafeArea(
         top: widget.topSafeArea,
         bottom: widget.bottomSafeArea,

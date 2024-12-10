@@ -12,7 +12,7 @@ class CustomColors {
   static const error = Color(0xFFCC0000);
 
   // Primary Colors
-  static const primary600 = Color(0xFF201545);
+  static const primary600 = Color(0xFF5AA731);
   static const primary500 = Color(0xFFAEA1BF);
 
   // Secondary Colors
@@ -25,6 +25,7 @@ class CustomColors {
   static const dark500 = Color(0xFF545454);
 
   // Light Colors
+  static const light700 = Color(0xF2F2F2F2);
   static const light600 = Color(0xFFC5C5C5);
   static const light500 = Color(0xFFD8D8D8);
   static const light400 = Color(0xFFEBEBEB);
