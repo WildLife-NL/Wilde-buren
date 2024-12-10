@@ -136,6 +136,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.2"
+  intl:
+    dependency: transitive
+    description:
+      name: intl
+      sha256: "99f282cb0e02edcbbf8c6b3bbc7c90b65635156c412e58f3975a7e55284ce685"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.20.0"
+  latlong2:
+    dependency: transitive
+    description:
+      name: latlong2
+      sha256: "98227922caf49e6056f91b6c56945ea1c7b166f28ffcd5fb8e72fc0b453cc8fe"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.9.1"
   leak_tracker:
     dependency: transitive
     description:
@@ -457,9 +473,9 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: bea66b1
-      resolved-ref: bea66b11be284c186cbbe48d76b08593cfc971ae
-      url: "git@github.com:WildLifeNLApps/Wildlife-api-connection.git"
+      ref: "1dafe4c"
+      resolved-ref: "1dafe4ca6394e114845716824e506bc4c09b3359"
+      url: "git@github.com:WildLife-NL/Wildlife-api-connection.git"
     source: git
     version: "0.0.1"
   win32:
