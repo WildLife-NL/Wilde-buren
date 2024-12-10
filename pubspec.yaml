@@ -45,7 +45,7 @@ dependencies:
   wildlife_api_connection:
     git:
       url: git@github.com:WildLife-NL/Wildlife-api-connection.git
-      ref: "2593dd1"
+      ref: "be651cb"
   smooth_page_indicator: ^1.2.0+3
   flutter_map: ^7.0.2
   geolocator: ^12.0.0

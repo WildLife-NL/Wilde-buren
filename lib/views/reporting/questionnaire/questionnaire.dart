@@ -58,7 +58,7 @@ class QuestionnaireViewState extends State<QuestionnaireView> {
 
                     for (var answer in answers) {
                       ResponseService().createResponse(
-                        widget.interaction.id,
+                        widget.interaction.id ?? "",
                         questionId,
                         question.allowMultipleResponse ? "" : answer,
                         question.allowMultipleResponse ? answer : "",

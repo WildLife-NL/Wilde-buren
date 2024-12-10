@@ -433,7 +433,10 @@ class ReportingCardViewState extends State<ReportingCardView> {
                           color: CustomColors.primary,
                         ),
                       ),
-                      Text("${widget.description!.substring(0, 40)} ..."),
+                      if (widget.description!.length <= 40)
+                        Text(widget.description!)
+                      else
+                        Text("${widget.description!.substring(0, 40)} ..."),
                       const SizedBox(height: 10),
                     ],
                   ],
