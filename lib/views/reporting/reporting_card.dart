@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:wilde_buren/config/theme/asset_icons.dart';
@@ -460,18 +461,7 @@ class ReportingCardViewState extends State<ReportingCardView> {
                         'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                     userAgentPackageName: 'com.wildlifenl.wildgids',
                   ),
-                  MarkerLayer(
-                    markers: [
-                      Marker(
-                        point: _currentLocation ??
-                            const LatLng(51.25851739912562, 5.622422796819703),
-                        width: 30,
-                        height: 30,
-                        child: SvgPicture.asset(AssetIcons.location),
-                        rotate: true,
-                      ),
-                    ],
-                  ),
+                  CurrentLocationLayer(),
                 ],
               ),
             ),
