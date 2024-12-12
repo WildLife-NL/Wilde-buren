@@ -4,12 +4,13 @@ import 'package:flutter_svg/svg.dart';
 import 'package:wilde_buren/config/theme/asset_icons.dart';
 import 'package:wilde_buren/config/theme/custom_colors.dart';
 import 'package:wilde_buren/config/theme/size_setter.dart';
+import 'package:wilde_buren/services/animal.dart';
 import 'package:wilde_buren/services/interaction_type.dart';
+import 'package:wilde_buren/services/tracking.dart';
 import 'package:wilde_buren/views/interaction/interaction_view.dart';
 import 'package:wilde_buren/views/profile/profile_view.dart';
 import 'package:wilde_buren/views/map/map_view.dart';
 import 'package:wilde_buren/views/reporting/reporting.dart';
-import 'package:wilde_buren/views/reporting/widgets/manager/location.dart';
 import 'package:wilde_buren/views/reporting/widgets/snackbar_with_progress_bar.dart';
 import 'package:wilde_buren/views/wiki/wiki_view.dart';
 import 'package:wildlife_api_connection/models/interaction.dart';
@@ -40,7 +41,6 @@ class _HomeViewState extends State<HomeView> {
   @override
   void initState() {
     super.initState();
-    LocationManager().requestLocationAccess(context);
     _getInteractionTypes();
   }
 
@@ -79,11 +79,14 @@ class _HomeViewState extends State<HomeView> {
         children: [
           IndexedStack(
             index: selectedIndex,
-            children: const [
-              MapView(),
-              InteractionView(),
-              SpeciesView(),
-              ProfileView(),
+            children: [
+              MapView(
+                animalService: AnimalService(),
+                trackingService: TrackingService(),
+              ),
+              const InteractionView(),
+              const SpeciesView(),
+              const ProfileView(),
             ],
           ),
         ],
