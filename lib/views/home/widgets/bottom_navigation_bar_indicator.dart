@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wilde_buren/config/theme/size_setter.dart';
 
 class BottomNavigationBarIndicator extends StatelessWidget {
   const BottomNavigationBarIndicator({
@@ -17,7 +18,8 @@ class BottomNavigationBarIndicator extends StatelessWidget {
     return AnimatedPositioned(
       duration: animationDuration,
       curve: Curves.easeInOut,
-      bottom: 45,
+      bottom: SizeSetter.getBottomNavigationBarHeight() -
+          (SizeSetter.getBottomNavigationBarHeight() / 1.25),
       left: selectedIndex * indicatorWidth,
       child: Container(
         width: indicatorWidth,
