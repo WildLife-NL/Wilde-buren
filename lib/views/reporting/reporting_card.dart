@@ -105,11 +105,6 @@ class ReportingCardViewState extends State<ReportingCardView> {
 
   @override
   Widget build(BuildContext context) {
-    print("loc: ${widget.location}");
-    print("des: ${widget.description}");
-    print("spe: ${widget.species}");
-    print("ani: ${widget.animalSpecies}");
-
     return Column(
       children: [
         Row(

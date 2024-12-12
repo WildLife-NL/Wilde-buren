@@ -56,17 +56,11 @@ class ReportingViewState extends State<ReportingView> {
   @override
   void initState() {
     super.initState();
-    loadLocation();
-  }
-
-  void loadLocation() async {
-    await getLocation();
+    getLocation();
   }
 
   Future<void> getLocation() async {
-    print("oui");
     final location = await LocationManager().getUserLocation(context);
-    print(location);
 
     setState(() {
       _reportLocation = location;

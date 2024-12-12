@@ -8,9 +8,10 @@ class LocationManager {
   Future<LatLng> getUserLocation(BuildContext context) async {
     final status = await _getLocationPermission();
     if (status.isGranted) {
-      Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-      );
+      Position position = await Geolocator.getLastKnownPosition() ??
+          await Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.high,
+          );
       return LatLng(position.latitude, position.longitude);
     } else if (status.isDenied) {
       if (!context.mounted) {
