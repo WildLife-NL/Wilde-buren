@@ -9,6 +9,13 @@ class AssetIcons {
   static const chevronLeft = '$_path/chevron-left.svg';
   static const chevronRight = '$_path/chevron-right.svg';
 
+// Animal Icons
+  static const bison = '$_path/bison.svg';
+  static const scottishHighlander = '$_path/scottish_highlander.svg';
+  static const wildBoar = '$_path/wild_boar.svg';
+  static const wolf = '$_path/wolf.svg';
+  static const universal = '$_path/dog_paws.svg';
+
   // Interaction types
   static const schademelding = '$_path/interaction-types/schademelding.svg';
   static const waarneming = '$_path/interaction-types/waarneming.svg';
