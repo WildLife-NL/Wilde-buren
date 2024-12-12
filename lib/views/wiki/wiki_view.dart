@@ -11,6 +11,6 @@ class SpeciesView extends StatefulWidget {
 class _SpeciesViewState extends State<SpeciesView> {
   @override
   Widget build(BuildContext context) {
-    return const CustomScaffold(body: Center(child: Text('Species')));
+    return const CustomScaffold(body: Center(child: Text('Wiki')));
   }
 }

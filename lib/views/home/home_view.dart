@@ -5,14 +5,13 @@ import 'package:wilde_buren/config/theme/asset_icons.dart';
 import 'package:wilde_buren/config/theme/custom_colors.dart';
 import 'package:wilde_buren/config/theme/size_setter.dart';
 import 'package:wilde_buren/services/interaction_type.dart';
-import 'package:wilde_buren/views/home/widgets/bottom_navigation_bar_indicator.dart';
 import 'package:wilde_buren/views/interaction/interaction_view.dart';
 import 'package:wilde_buren/views/profile/profile_view.dart';
 import 'package:wilde_buren/views/map/map_view.dart';
 import 'package:wilde_buren/views/reporting/reporting.dart';
 import 'package:wilde_buren/views/reporting/widgets/manager/location.dart';
 import 'package:wilde_buren/views/reporting/widgets/snackbar_with_progress_bar.dart';
-import 'package:wilde_buren/views/species/species_view.dart';
+import 'package:wilde_buren/views/wiki/wiki_view.dart';
 import 'package:wildlife_api_connection/models/interaction.dart';
 import 'package:wildlife_api_connection/models/interaction_type.dart';
 
@@ -81,102 +80,103 @@ class _HomeViewState extends State<HomeView> {
           IndexedStack(
             index: selectedIndex,
             children: const [
-              InteractionView(),
               MapView(),
+              InteractionView(),
               SpeciesView(),
               ProfileView(),
             ],
           ),
         ],
       ),
-      bottomNavigationBar: Stack(
-        children: [
-          Theme(
-            data: Theme.of(context).copyWith(
-              splashFactory: NoSplash.splashFactory,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      extendBody: true,
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: CustomColors.primary,
+        shape: const CircleBorder(),
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
             ),
-            child: BottomAppBar(
-              color: CustomColors.primary,
-              padding: const EdgeInsets.symmetric(horizontal: 0),
-              height: SizeSetter.getBottomNavigationBarHeight(),
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  _buildNavItem(Icons.home, "Home", 0),
-                  _buildNavItem(Icons.location_on, "Map", 1),
-                  _buildNavItem(Icons.add_box_outlined, "", -1, isCenter: true),
-                  _buildNavItem(Icons.info, "Wiki", 2),
-                  _buildNavItem(Icons.person, "Account", 3),
+            backgroundColor: CustomColors.light700,
+            builder: (context) => Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 25.0, vertical: 20.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        "Maak rapportage:",
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: CustomColors.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(
+                          Icons.cancel,
+                          color: Colors.grey,
+                          size: 28,
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  if (_interactionTypes.isNotEmpty)
+                    _buildInteractionTypes(_interactionTypes)
+                  else
+                    const Center(
+                      child: CircularProgressIndicator(),
+                    ),
                 ],
               ),
             ),
-          ),
-          BottomNavigationBarIndicator(
-            selectedIndex:
-                selectedIndex >= 2 ? selectedIndex + 1 : selectedIndex,
-            indicatorWidth: MediaQuery.of(context).size.width / 5,
-          ),
-        ],
+          );
+        },
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+          size: 32.0,
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        height: SizeSetter.getBottomNavigationBarHeight(),
+        color: CustomColors.light700,
+        shape: const CircularNotchedRectangle(),
+        notchMargin: 15,
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            _buildNavItem(Icons.home_outlined, "Home", 0),
+            _buildNavItem(Icons.notification_add_outlined, "Meldingen", 1),
+            const Spacer(),
+            _buildNavItem(Icons.info_outline, "Wiki", 2),
+            _buildNavItem(Icons.person_outline, "Account", 3),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildNavItem(IconData icon, String label, int index,
-      {bool isCenter = false}) {
+  Widget _buildNavItem(
+    IconData icon,
+    String label,
+    int index,
+  ) {
     return Expanded(
       child: GestureDetector(
         onTap: () {
-          if (!isCenter) {
-            onItemTapped(index);
-          } else {
-            showModalBottomSheet(
-              context: context,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
-              ),
-              backgroundColor: CustomColors.light700,
-              builder: (context) => Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 25.0, vertical: 20.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Maak rapportage:",
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: CustomColors.primary,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        IconButton(
-                          icon: const Icon(
-                            Icons.cancel,
-                            color: Colors.grey,
-                            size: 28,
-                          ),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    if (_interactionTypes.isNotEmpty)
-                      _buildInteractionTypes(_interactionTypes)
-                    else
-                      const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                  ],
-                ),
-              ),
-            );
-          }
+          onItemTapped(index);
         },
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -184,15 +184,18 @@ class _HomeViewState extends State<HomeView> {
           children: [
             Icon(
               icon,
-              size: isCenter ? 42 : 28,
-              color: Colors.white,
+              size: selectedIndex == index ? 32 : 28,
+              color:
+                  selectedIndex == index ? CustomColors.primary : Colors.black,
             ),
             if (label.isNotEmpty)
               Text(
                 label,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 12,
-                  color: Colors.white,
+                  color: selectedIndex == index
+                      ? CustomColors.primary
+                      : Colors.black,
                 ),
               ),
           ],

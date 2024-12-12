@@ -11,6 +11,6 @@ class InteractionView extends StatefulWidget {
 class _InteractionViewState extends State<InteractionView> {
   @override
   Widget build(BuildContext context) {
-    return const CustomScaffold(body: Center(child: Text('Interaction')));
+    return const CustomScaffold(body: Center(child: Text('Meldingen')));
   }
 }
