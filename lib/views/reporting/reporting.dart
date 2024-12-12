@@ -5,6 +5,7 @@ import 'package:wilde_buren/config/theme/custom_colors.dart';
 import 'package:wilde_buren/services/interaction.dart';
 import 'package:wilde_buren/views/home/home_view.dart';
 import 'package:wilde_buren/views/reporting/reporting_card.dart';
+import 'package:wilde_buren/views/reporting/widgets/manager/location.dart';
 import 'package:wildlife_api_connection/models/interaction.dart';
 import 'package:wildlife_api_connection/models/interaction_type.dart';
 import 'package:wildlife_api_connection/models/location.dart';
@@ -60,9 +61,9 @@ class ReportingViewState extends State<ReportingView> {
   void _updateInteractionData(
     String? description,
     Species? species,
-    LatLng? location,
     String? animalSpecies,
-  ) {
+  ) async {
+    final location = await LocationManager().getUserLocation(context);
     setState(() {
       _description = description;
       _selectedSpecies = species;

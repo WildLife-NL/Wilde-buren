@@ -6,7 +6,6 @@ import 'package:latlong2/latlong.dart';
 import 'package:wilde_buren/config/theme/asset_icons.dart';
 import 'package:wilde_buren/config/theme/custom_colors.dart';
 import 'package:wilde_buren/services/species.dart';
-import 'package:wilde_buren/views/reporting/widgets/manager/location.dart';
 import 'package:wildlife_api_connection/models/interaction_type.dart';
 import 'package:wildlife_api_connection/models/species.dart';
 
@@ -18,7 +17,6 @@ class ReportingCardView extends StatefulWidget {
   final Function(
     String? description,
     Species? species,
-    LatLng? location,
     String? animalSpecies,
   ) onDataChanged;
   final String? animalSpecies;
@@ -51,11 +49,6 @@ class ReportingCardView extends StatefulWidget {
 class ReportingCardViewState extends State<ReportingCardView> {
   List<Species> _species = [];
 
-  String? _description;
-  LatLng? _currentLocation;
-  String? _animalSpecies;
-  Species? _selectedSpecies;
-
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _descriptionController = TextEditingController();
 
@@ -72,19 +65,11 @@ class ReportingCardViewState extends State<ReportingCardView> {
     super.initState();
     _getSpecies();
 
-    if (widget.step == 3 || widget.step == 4) {
-      _getLocation();
-    }
-
     _descriptionController.addListener(() {
       setState(() {
         _descriptionIsEmpty = _descriptionController.text.isEmpty;
       });
     });
-  }
-
-  void _getLocation() async {
-    _currentLocation = await LocationManager().getUserLocation(context);
   }
 
   void _getSpecies() async {
@@ -97,62 +82,32 @@ class ReportingCardViewState extends State<ReportingCardView> {
   }
 
   Future<void> _updateDescription(String? description) async {
-    if (mounted) {
-      setState(() {
-        _description = description;
-      });
-    }
     widget.onDataChanged(
-      _description,
-      _selectedSpecies,
-      LatLng(_currentLocation!.latitude, _currentLocation!.longitude),
-      _animalSpecies,
-    );
-  }
-
-  Future<void> _updateLocation() async {
-    widget.onDataChanged(
-      null,
-      _selectedSpecies,
-      _currentLocation,
-      _animalSpecies,
+      description,
+      widget.species,
+      widget.animalSpecies,
     );
   }
 
   void _selectSpecies(Species species) {
-    if (mounted) {
-      setState(() {
-        _selectedSpecies = species;
-      });
-    }
+    if (mounted) {}
     widget.onDataChanged(
       null,
-      _selectedSpecies,
-      null,
-      _animalSpecies,
+      species,
+      widget.animalSpecies,
     );
   }
 
   void _selectAnimalSpecies(String animalSpecies) {
-    if (mounted) {
-      setState(() {
-        _animalSpecies = animalSpecies;
-      });
-    }
     widget.onDataChanged(
       null,
       null,
-      null,
-      _animalSpecies,
+      animalSpecies,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    _animalSpecies = widget.animalSpecies;
-    _selectedSpecies = widget.species;
-    _description = widget.description ?? _descriptionController.text;
-
     return Column(
       children: [
         Row(
@@ -350,7 +305,7 @@ class ReportingCardViewState extends State<ReportingCardView> {
                 mainAxisSpacing: 20.0,
                 childAspectRatio: 0.70,
               ),
-              itemCount: widget.interactionType!.id != 2 ? 3 : 1,
+              itemCount: 3,
               itemBuilder: (BuildContext context, int index) {
                 return Column(
                   mainAxisSize: MainAxisSize.min,
@@ -399,13 +354,11 @@ class ReportingCardViewState extends State<ReportingCardView> {
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      widget.interactionType!.id != 2
-                          ? index == 0
-                              ? widget.interactionType!.name
-                              : index == 1
-                                  ? widget.animalSpecies ?? ""
-                                  : widget.species!.commonName
-                          : widget.interactionType!.name,
+                      index == 0
+                          ? widget.interactionType!.name
+                          : index == 1
+                              ? widget.animalSpecies ?? ""
+                              : widget.species!.commonName,
                       style: const TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.bold,
@@ -451,7 +404,7 @@ class ReportingCardViewState extends State<ReportingCardView> {
               child: FlutterMap(
                 mapController: MapController(),
                 options: MapOptions(
-                  initialCenter: _currentLocation ??
+                  initialCenter: widget.location ??
                       const LatLng(51.25851739912562, 5.622422796819703),
                   initialZoom: 11,
                 ),
@@ -486,7 +439,6 @@ class ReportingCardViewState extends State<ReportingCardView> {
                   backgroundColor: CustomColors.primary,
                 ),
                 onPressed: () {
-                  _updateLocation();
                   widget.onPressed();
                 },
                 child: Text(widget.buttonText),
