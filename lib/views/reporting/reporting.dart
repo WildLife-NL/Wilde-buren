@@ -56,6 +56,21 @@ class ReportingViewState extends State<ReportingView> {
   @override
   void initState() {
     super.initState();
+    loadLocation();
+  }
+
+  void loadLocation() async {
+    await getLocation();
+  }
+
+  Future<void> getLocation() async {
+    print("oui");
+    final location = await LocationManager().getUserLocation(context);
+    print(location);
+
+    setState(() {
+      _reportLocation = location;
+    });
   }
 
   void _updateInteractionData(
@@ -63,12 +78,18 @@ class ReportingViewState extends State<ReportingView> {
     Species? species,
     String? animalSpecies,
   ) async {
-    final location = await LocationManager().getUserLocation(context);
+    //final location = await LocationManager().getUserLocation(context);
+
+    print("loc: $_reportLocation");
+    print("des: $description");
+    print("spe: $species");
+    print("ani: $animalSpecies");
+    print("-----");
+
     setState(() {
       _description = description;
       _selectedSpecies = species;
       _selectedAnimalSpecies = animalSpecies;
-      _reportLocation = location;
     });
   }
 

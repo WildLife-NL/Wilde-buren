@@ -74,14 +74,12 @@ class ReportingCardViewState extends State<ReportingCardView> {
 
   void _getSpecies() async {
     var speciesData = await SpeciesService().getAllSpecies();
-    if (mounted) {
-      setState(() {
-        _species = speciesData;
-      });
-    }
+    setState(() {
+      _species = speciesData;
+    });
   }
 
-  Future<void> _updateDescription(String? description) async {
+  void _updateDescription(String? description) {
     widget.onDataChanged(
       description,
       widget.species,
@@ -90,7 +88,6 @@ class ReportingCardViewState extends State<ReportingCardView> {
   }
 
   void _selectSpecies(Species species) {
-    if (mounted) {}
     widget.onDataChanged(
       null,
       species,
@@ -108,6 +105,11 @@ class ReportingCardViewState extends State<ReportingCardView> {
 
   @override
   Widget build(BuildContext context) {
+    print("loc: ${widget.location}");
+    print("des: ${widget.description}");
+    print("spe: ${widget.species}");
+    print("ani: ${widget.animalSpecies}");
+
     return Column(
       children: [
         Row(
