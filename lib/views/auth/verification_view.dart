@@ -37,11 +37,12 @@ class VerificationViewState extends State<VerificationView> {
           .authorize(widget.email, _verificationCodeController.text);
       debugPrint(user.name);
       if (!mounted) return;
-      Navigator.pushReplacement(
+      Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
           builder: (context) => const Initializer(),
         ),
+        (route) => false,
       );
     } catch (e) {
       debugPrint(e.toString());
