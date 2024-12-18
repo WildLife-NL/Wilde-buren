@@ -42,11 +42,6 @@ class _HomeViewState extends State<HomeView> {
   void initState() {
     super.initState();
     _getInteractionTypes();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
       if (widget.interaction != null &&
