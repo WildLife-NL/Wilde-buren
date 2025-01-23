@@ -1,0 +1,60 @@
+PODS:
+  - Flutter (1.0.0)
+  - flutter_compass (0.0.1):
+    - Flutter
+  - geolocator_apple (1.2.0):
+    - Flutter
+  - isar_flutter_libs (1.0.0):
+    - Flutter
+  - package_info_plus (0.4.5):
+    - Flutter
+  - path_provider_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
+  - permission_handler_apple (9.3.0):
+    - Flutter
+  - shared_preferences_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - flutter_compass (from `.symlinks/plugins/flutter_compass/ios`)
+  - geolocator_apple (from `.symlinks/plugins/geolocator_apple/ios`)
+  - isar_flutter_libs (from `.symlinks/plugins/isar_flutter_libs/ios`)
+  - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
+  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
+  - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
+  - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  flutter_compass:
+    :path: ".symlinks/plugins/flutter_compass/ios"
+  geolocator_apple:
+    :path: ".symlinks/plugins/geolocator_apple/ios"
+  isar_flutter_libs:
+    :path: ".symlinks/plugins/isar_flutter_libs/ios"
+  package_info_plus:
+    :path: ".symlinks/plugins/package_info_plus/ios"
+  path_provider_foundation:
+    :path: ".symlinks/plugins/path_provider_foundation/darwin"
+  permission_handler_apple:
+    :path: ".symlinks/plugins/permission_handler_apple/ios"
+  shared_preferences_foundation:
+    :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
+
+SPEC CHECKSUMS:
+  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  flutter_compass: cbbd285cea1584c7ac9c4e0c3e1f17cbea55e855
+  geolocator_apple: 6cbaf322953988e009e5ecb481f07efece75c450
+  isar_flutter_libs: b69f437aeab9c521821c3f376198c4371fa21073
+  package_info_plus: 58f0028419748fad15bf008b270aaa8e54380b1c
+  path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
+  permission_handler_apple: 9878588469a2b0d0fc1e048d9f43605f92e6cec2
+  shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
+
+PODFILE CHECKSUM: f0a4d050789b638acaf7272bdc204906acfb1d95
+
+COCOAPODS: 1.15.2
